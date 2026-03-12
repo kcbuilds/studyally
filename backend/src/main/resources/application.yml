@@ -20,8 +20,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: business.studyally@gmail.com
+    password: abcd efgh ijkl mnop
     properties:
       mail:
         smtp:
@@ -38,7 +38,7 @@ spring:
 
 app:
   jwt:
-    secret: ${JWT_SECRET}
+    secret: ${JWT_SECRET}studybuddy-super-secret-jwt-key-change-this
     expiration-ms: 86400000
 
 logging:
