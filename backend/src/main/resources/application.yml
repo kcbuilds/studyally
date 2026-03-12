@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://nozomi.proxy.rlwy.net:10643/railway
+    username: root
+    password: TkhTngunCsolHqCCBIqNMqDBKtdocnYT
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
