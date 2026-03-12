@@ -3,6 +3,7 @@ package com.studybuddy.config;
 import com.studybuddy.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -49,10 +50,20 @@ public class SecurityConfig {
 
     @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
     http
-        .cors()
-        .and()
-        .csrf().disable();
+        .cors(cors -> {}) 
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+
+            // allow auth endpoints
+            .requestMatchers("/api/auth/**").permitAll()
+
+            // allow preflight requests
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+            .anyRequest().authenticated()
+        );
 
     return http.build();
 }
@@ -80,17 +91,27 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-config.setAllowedOrigins(List.of(
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "https://study-ally.vercel.app"   // ← replace with your actual Vercel URL
-    ));        config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+public CorsConfigurationSource corsConfigurationSource() {
+
+    CorsConfiguration config = new CorsConfiguration();
+
+    config.setAllowedOrigins(List.of(
+            "http://localhost:5173",
+            "https://study-ally.vercel.app"
+    ));
+
+    config.setAllowedMethods(List.of(
+            "GET","POST","PUT","DELETE","OPTIONS"
+    ));
+
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
+
+    source.registerCorsConfiguration("/**", config);
+
+    return source;
+}
 }
